@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Horario extends Model
 {
     //
-    protected $fillable = ['day', 'fecha', 'num_funciones', 'hora', 'precio'];
+    protected $fillable = ['day', 'fecha', 'num_funciones', 'hora', 'precio', 'pelicula_id'];
 
     public function pelicula(){
-        return $this->belongsTo('App/Pelicula');
+        return $this->belongsTo('App\Pelicula');
     }
 }

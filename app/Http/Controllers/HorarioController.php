@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Horario;
+use App\Pelicula;
+use Exception;
 use Illuminate\Http\Request;
 
 class HorarioController extends Controller
@@ -28,13 +30,21 @@ class HorarioController extends Controller
     public function store(Request $request)
     {
         //
-        if (!$request->input('day') || !$request->input('fecha') || !$request->input('num_funciones') || !$request->input('hora') || !$request->input('precio') || !$request->input('pelicula_id'))
-		{
-			// NO estamos recibiendo los campos necesarios. Devolvemos error.
-			return response()->json(['status'=>'failed','msg'=>'Faltan datos necesarios para la creacion']);
-		}
-        $horario = Horario::create($request->all());
-        return response()->json(['status'=>'ok','data'=>$horario]);
+        if (!$request->input('day') || !$request->input('fecha') || !$request->input('num_funciones') || !$request->input('hora') || !$request->input('precio') || !$request->input('pelicula_id') || !$request->input('pelicula_id')) {
+            // NO estamos recibiendo los campos necesarios. Devolvemos error.
+            return response()->json(['status' => 'failed', 'msg' => 'Faltan datos necesarios para la creacion']);
+        }
+
+        $pelicula = Pelicula::find($request->input('pelicula_id'));
+        if (!$pelicula) {
+            return response()->json(['status' => 'failed', 'msg' => 'No existe pelicula con este id']);
+        }
+        try {
+            $horario = Horario::create($request->all());
+            return response()->json(['status' => 'ok', 'data' => $horario]);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'failed', 'msg' => 'Ya hay un horario asigando a esta pelicula']);
+        }
     }
 
     /**
@@ -46,10 +56,10 @@ class HorarioController extends Controller
     public function show($id)
     {
         $horario = Horario::find($id);
-        if (!$horario){
+        if (!$horario) {
             return response()->json(['status' => 'failed', 'msg' => 'No existe horario con este id']);
         }
-        return response()->json(['status'=>'ok','data'=>$horario]);
+        return response()->json(['status' => 'ok', 'data' => $horario]);
         //
     }
 
@@ -65,7 +75,7 @@ class HorarioController extends Controller
         //
         $horario = Horario::find($id);
 
-        if (!$horario){
+        if (!$horario) {
             return response()->json(['status' => 'failed', 'msg' => 'No existe horario con este id']);
         }
 
@@ -76,38 +86,50 @@ class HorarioController extends Controller
         $precio = $request->input('precio');
         $pelicula_id = $request->input('pelicula_id');
 
+
+        $pelicula = Pelicula::find($pelicula_id);
+        if ($pelicula_id && !$pelicula) {
+            return response()->json(['status' => 'failed', 'msg' => 'No existe pelicula con este id']);
+        }
+
+
         $bandera = false;
 
-        if ($day !== null && $day !== ''){
+        if ($day !== null && $day !== '') {
             $horario->day = $day;
             $bandera = true;
         }
-        if ($fecha !== null && $fecha !== ''){
+        if ($fecha !== null && $fecha !== '') {
             $horario->fecha = $fecha;
             $bandera = true;
         }
-        if ($num_funciones !== null && $num_funciones !== ''){
+        if ($num_funciones !== null && $num_funciones !== '') {
             $horario->num_funciones = $num_funciones;
             $bandera = true;
         }
-        if ($hora !== null && $hora !== ''){
+        if ($hora !== null && $hora !== '') {
             $horario->hora = $hora;
             $bandera = true;
         }
-        if ($precio !== null && $precio !== ''){
+        if ($precio !== null && $precio !== '') {
             $horario->precio = $precio;
             $bandera = true;
         }
-        if ($pelicula_id !== null && $pelicula_id !== ''){
+        if ($pelicula_id !== null && $pelicula_id !== '') {
             $horario->pelicula_id = $pelicula_id;
             $bandera = true;
         }
 
-        if ($bandera){
-            $horario->save();
-            return response()->json(['status'=>'ok','data'=>$horario]);
+        if ($bandera) {
+            try {
+                $horario->save();
+                return response()->json(['status' => 'ok', 'data' => $horario]);
+            } catch (Exception $e) {
+                return response()->json(['status' => 'failed', 'msg' => 'Ya hay un horario asigando a esta pelicula']);
+            }
         }
-        return response()->json(['status'=>'failed','msg'=>'No se ha podido modificado el horario']);
+
+        return response()->json(['status' => 'failed', 'msg' => 'No se ha podido modificado el horario']);
     }
 
     /**
@@ -120,10 +142,10 @@ class HorarioController extends Controller
     {
         //
         $horario = Horario::find($id);
-        if (!$horario){
+        if (!$horario) {
             return response()->json(['status' => 'failed', 'msg' => 'No existe horario con este id']);
         }
         $horario->delete();
-        return response()->json(['status'=>'ok','msg'=>'Se ha eliminado correctamente']);
+        return response()->json(['status' => 'ok', 'msg' => 'Se ha eliminado correctamente']);
     }
 }

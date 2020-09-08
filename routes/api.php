@@ -24,3 +24,9 @@ Route::apiResources([
     'promotions' => 'PromotionController',
     'horarios' => 'HorarioController'
 ]);
+
+Route::group([], function () {
+    Route::get('promotionpage', 'ExtraRoutesController@promotion');
+    Route::get('peliculaspage', 'ExtraRoutesController@peliculas');
+    Route::get('combospage', 'ExtraRoutesController@combo');
+});

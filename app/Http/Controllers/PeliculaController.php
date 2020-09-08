@@ -31,13 +31,24 @@ class PeliculaController extends Controller
         //
 
         if (!$request->input('title') || !$request->input('description') || !$request->input('duration') 
-            || !$request->input('img') || !$request->input('precio_min') || !$request->input('url_trailer') 
-            || !$request->input('url_compra') || !$request->input('type_public') || !$request->input('category'))
+             || !$request->input('precio_min') || !$request->input('url_trailer') || !$request->input('url_compra') 
+             || !$request->input('type_public') || !$request->input('category'))
 		{
 			// NO estamos recibiendo los campos necesarios. Devolvemos error.
 			return response()->json(['status'=>'failed','msg'=>'Faltan datos necesarios para la creacion']);
-		}
-        $pelicula = Pelicula::create($request->all());
+        }
+        
+        // Subir una image
+        $input = $request->all();
+
+        if ($request->hasFile('image')){
+            $file = $request->file('image');
+            $name = time().$file->getClientOriginalName();
+            $file->move(public_path().'/imgs/', $name);
+            $input['img'] = $name;
+        }
+
+        $pelicula = Pelicula::create($input);
         return response()->json(['status'=>'ok','data'=>$pelicula]);
     }
 
@@ -152,6 +163,7 @@ class PeliculaController extends Controller
         if (!$pelicula) {
             return response()->json(['status' => 'failed', 'msg' => 'No existe pelicula con este id']);
         } 
+        $pelicula->horario()->delete();
         $pelicula->delete();
         return response()->json(['status'=>'ok','msg'=>'Se ha eliminado correctamente']);
     }
