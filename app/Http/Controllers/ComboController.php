@@ -30,7 +30,7 @@ class ComboController extends Controller
     {
         //
 
-        if (!$request->input('title') || !$request->input('description') || !$request->input('precio') || !$request->input('comision') || !$request->hasFile('image')) {
+        if (!$request->input('title') || !$request->input('description') || !$request->input('precio')  || !$request->hasFile('image')) {
             // NO estamos recibiendo los campos necesarios. Devolvemos error.
             return response()->json(['status' => 'failed', 'msg' => 'Faltan datos necesarios para la creacion']);
         }
@@ -42,17 +42,7 @@ class ComboController extends Controller
         $name = time() . $file->getClientOriginalName();
         $file->move(public_path() . '/imgs/combos/', $name);
         $input['img'] = '/imgs/combos/' . $name;
-
-        // Subir una image en data 64
-
-        //get the base-64 from data
-          /*   $base64_str = substr($input->image, strpos($input->image, ",")+1);
-         //decode base64 string
-         $image = base64_decode($base64_str);
-         $png_url = "product-".time().".png";
-         $path = public_path('img/designs/' . $png_url);
- */
-
+        
         $combo = Combo::create($input);
         return response()->json(['status' => 'ok', 'data' => $combo]);
     }
@@ -135,7 +125,7 @@ class ComboController extends Controller
             // Subir una image
             $path = time() . $imagen->getClientOriginalName();
             $imagen->move(public_path() . '/imgs/combos/', $path);
-            $combo->img = public_path() . '/imgs/combos/'. $path;
+            $combo->img = '/imgs/combos/'. $path;
 
             $bandera = true;
         }

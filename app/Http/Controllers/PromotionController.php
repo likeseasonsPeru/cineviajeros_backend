@@ -28,14 +28,25 @@ class PromotionController extends Controller
     public function store(Request $request)
     {
         //
-        if (!$request->input('title') || !$request->input('description') || !$request->input('precio') 
-            || !$request->input('img') || !$request->input('url'))
-		{
-			// NO estamos recibiendo los campos necesarios. Devolvemos error.
-			return response()->json(['status'=>'failed','msg'=>'Faltan datos necesarios para la creacion']);
-		}
-        $promotion = Promotion::create($request->all());
-        return response()->json(['status'=>'ok','data'=>$promotion]);
+        if (
+            !$request->input('title') || !$request->input('description') || !$request->input('precio')
+            || !$request->hasFile('image') || !$request->input('url')
+        ) {
+            // NO estamos recibiendo los campos necesarios. Devolvemos error.
+            return response()->json(['status' => 'failed', 'msg' => 'Faltan datos necesarios para la creacion']);
+        }
+
+        // Subir una image
+        $input = $request->all();
+
+
+        $file = $request->file('image');
+        $name = time() . $file->getClientOriginalName();
+        $file->move(public_path() . '/imgs/promociones/', $name);
+        $input['img'] = '/imgs/promociones/' . $name;
+
+        $promotion = Promotion::create($input);
+        return response()->json(['status' => 'ok', 'data' => $promotion]);
     }
 
     /**
@@ -48,7 +59,7 @@ class PromotionController extends Controller
     {
         //
         $promotion = Promotion::find($id);
-        if (!$promotion){
+        if (!$promotion) {
             return response()->json(['status' => 'failed', 'msg' => 'No existe promocion con este id']);
         }
         return response()->json(['status' => 'ok', 'data' => $promotion]);
@@ -66,7 +77,7 @@ class PromotionController extends Controller
         //
         $promotion = Promotion::find($id);
 
-        if (!$promotion){
+        if (!$promotion) {
             return response()->json(['status' => 'failed', 'msg' => 'No existe promocion con este id']);
         }
 
@@ -76,39 +87,54 @@ class PromotionController extends Controller
         $img = $request->input('img');
         $url = $request->input('url');
         $comision = $request->input('comision');
+        $imagen = $request->file('image');
 
         $bandera = false;
 
-        if ($title !== null && $title !== ''){
+        if ($title !== null && $title !== '') {
             $promotion->title = $title;
             $bandera = true;
         }
-        if ($description !== null && $description !== ''){
+        if ($description !== null && $description !== '') {
             $promotion->description = $description;
             $bandera = true;
         }
-        if ($precio !== null && $precio !== ''){
+        if ($precio !== null && $precio !== '') {
             $promotion->precio = $precio;
             $bandera = true;
         }
-        if ($img !== null && $img !== ''){
+        if ($img !== null && $img !== '') {
             $promotion->img = $img;
             $bandera = true;
         }
-        if ($url !== null && $url !== ''){
+        if ($url !== null && $url !== '') {
             $promotion->url = $url;
             $bandera = true;
         }
-        if ($comision !== null && $comision !== ''){
+        if ($comision !== null && $comision !== '') {
             $promotion->comision = $comision;
             $bandera = true;
         }
+        if ($request->hasFile('image')){
+            // Eliminar la imagen antigua
+            $imgPath = public_path().$promotion->img;
+            if (@getimagesize($imgPath)){
+                unlink($imgPath);
+            }
 
-        if ($bandera){
-            $promotion->save();
-            return response()->json(['status'=>'ok','data'=>$promotion]);
+            // Subir una image
+            $path = time() . $imagen->getClientOriginalName();
+            $imagen->move(public_path() . '/imgs/promociones/', $path);
+            $promotion->img = '/imgs/promociones/'. $path;
+            
+            $bandera = true;
         }
-        return response()->json(['status'=>'failed','msg'=>'No se ha podido modificado el promocion']);
+
+        if ($bandera) {
+            $promotion->save();
+            return response()->json(['status' => 'ok', 'data' => $promotion]);
+        }
+        return response()->json(['status' => 'failed', 'msg' => 'No se ha podido modificado el promocion']);
     }
 
     /**
@@ -121,10 +147,10 @@ class PromotionController extends Controller
     {
         //
         $promotion = Promotion::find($id);
-        if (!$promotion){
+        if (!$promotion) {
             return response()->json(['status' => 'failed', 'msg' => 'No existe promocion con este id']);
         }
         $promotion->delete();
-        return response()->json(['status'=>'ok','msg'=>'Se ha eliminado correctamente']);
+        return response()->json(['status' => 'ok', 'msg' => 'Se ha eliminado correctamente']);
     }
 }

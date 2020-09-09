@@ -30,7 +30,7 @@ class HorarioController extends Controller
     public function store(Request $request)
     {
         //
-        if (!$request->input('day') || !$request->input('fecha') || !$request->input('num_funciones') || !$request->input('hora') || !$request->input('precio') || !$request->input('pelicula_id') || !$request->input('pelicula_id')) {
+        if (!$request->input('day') || !$request->input('fecha') || !$request->input('num_funciones') || !$request->input('hora') || !$request->input('precio') || !$request->input('pelicula_id') || !$request->input('pelicula_id') || !$request->input('idioma')) {
             // NO estamos recibiendo los campos necesarios. Devolvemos error.
             return response()->json(['status' => 'failed', 'msg' => 'Faltan datos necesarios para la creacion']);
         }
@@ -39,12 +39,9 @@ class HorarioController extends Controller
         if (!$pelicula) {
             return response()->json(['status' => 'failed', 'msg' => 'No existe pelicula con este id']);
         }
-        try {
-            $horario = Horario::create($request->all());
-            return response()->json(['status' => 'ok', 'data' => $horario]);
-        } catch (Exception $e) {
-            return response()->json(['status' => 'failed', 'msg' => 'Ya hay un horario asigando a esta pelicula']);
-        }
+
+        $horario = Horario::create($request->all());
+        return response()->json(['status' => 'ok', 'data' => $horario]);
     }
 
     /**
@@ -85,6 +82,7 @@ class HorarioController extends Controller
         $hora = $request->input('hora');
         $precio = $request->input('precio');
         $pelicula_id = $request->input('pelicula_id');
+        $idioma = $request->input('idioma');
 
 
         $pelicula = Pelicula::find($pelicula_id);
@@ -119,6 +117,11 @@ class HorarioController extends Controller
             $horario->pelicula_id = $pelicula_id;
             $bandera = true;
         }
+        if ($idioma !== null && $idioma !== '') {
+            $horario->idioma = $idioma;
+            $bandera = true;
+        }
+
 
         if ($bandera) {
             try {
