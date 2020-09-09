@@ -23,7 +23,7 @@ class CreatePeliculasTable extends Migration
             $table->string('precio_min')->nullable();
             $table->boolean('comision')->default(false);
             $table->string('url_trailer')->nullable();
-            $table->string('url_compra');
+            $table->string('url_compra')->nullable();
             $table->string('type_public')->nullable();
             $table->string('category');
             $table->timestamps();

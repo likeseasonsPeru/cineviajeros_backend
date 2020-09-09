@@ -23,10 +23,11 @@ Route::apiResources([
     'combos' => 'ComboController',
     'promotions' => 'PromotionController',
     'horarios' => 'HorarioController'
-]);
+], ["middleware" => "apikey.validate"]);
 
-Route::group([], function () {
+Route::group(["middleware" => "apikey.validate"], function () {
     Route::get('promotionpage', 'ExtraRoutesController@promotion');
     Route::get('peliculaspage', 'ExtraRoutesController@peliculas');
-    Route::get('combospage', 'ExtraRoutesController@combo');
+    Route::get('horariosPelicula/{id}', 'ExtraRoutesController@horariosByPelicula');
+    Route::get('peliculaCategory/{category}', 'ExtraRoutesController@peliculasByCategoria');
 });

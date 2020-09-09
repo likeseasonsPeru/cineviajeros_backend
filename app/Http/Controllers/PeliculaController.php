@@ -33,8 +33,7 @@ class PeliculaController extends Controller
 
         if (
             !$request->input('title') || !$request->input('description') || !$request->input('duration')
-            || !$request->input('precio_min') || !$request->input('url_trailer') || !$request->input('url_compra')
-            || !$request->input('category') || !$request->hasFile('image')
+            || !$request->input('precio_min')|| !$request->input('category') || !$request->hasFile('image')
         ) {
             // NO estamos recibiendo los campos necesarios. Devolvemos error.
             return response()->json(['status' => 'failed', 'msg' => 'Faltan datos necesarios para la creacion']);
