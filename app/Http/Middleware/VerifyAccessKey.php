@@ -15,7 +15,7 @@ class VerifyAccessKey
     public function handle($request, Closure $next)
     {
         // Obtenemos el api-key que el usuario envia
-        $key = $request->headers->get('api_key');
+        $key = $request->headers->get('X-Authorization');
         $headers = apache_request_headers();
         // Si coincide con el valor almacenado en la aplicacion
         // la aplicacion se sigue ejecutando
@@ -23,7 +23,7 @@ class VerifyAccessKey
             return $next($request);
         } else {
             // Si falla devolvemos el mensaje de error
-            return response()->json(['status' => 'failed', 'msg' => 'unauthorized', 'key' => $headers['Authorization'] ]);
+            return response()->json(['status' => 'failed', 'msg' => 'unauthorized' ]);
         }
     }
 }

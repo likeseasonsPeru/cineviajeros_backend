@@ -16,7 +16,7 @@ class PeliculaController extends Controller
     public function index()
     {
         //
-        $peliculas = Pelicula::all();
+        $peliculas = Pelicula::with('horario')->get();
         return $peliculas;
     }
 

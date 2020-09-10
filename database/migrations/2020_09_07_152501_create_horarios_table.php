@@ -21,6 +21,7 @@ class CreateHorariosTable extends Migration
             $table->string('hora');
             $table->string('precio');
             $table->string('idioma');
+            $table->boolean('actived')->default(true);
             $table->unsignedBigInteger('pelicula_id');
             $table->foreign('pelicula_id')->references('id')->on('peliculas');
             $table->timestamps();

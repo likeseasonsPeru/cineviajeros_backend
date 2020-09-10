@@ -30,7 +30,7 @@ class HorarioController extends Controller
     public function store(Request $request)
     {
         //
-        if (!$request->input('day') || !$request->input('fecha') || !$request->input('num_funciones') || !$request->input('hora') || !$request->input('precio') || !$request->input('pelicula_id') || !$request->input('pelicula_id') || !$request->input('idioma')) {
+        if (!$request->input('day') || !$request->input('fecha') || !$request->input('num_funciones') || !$request->input('hora') || !$request->input('precio') || !$request->input('pelicula_id')  || !$request->input('idioma')) {
             // NO estamos recibiendo los campos necesarios. Devolvemos error.
             return response()->json(['status' => 'failed', 'msg' => 'Faltan datos necesarios para la creacion']);
         }
@@ -83,6 +83,7 @@ class HorarioController extends Controller
         $precio = $request->input('precio');
         $pelicula_id = $request->input('pelicula_id');
         $idioma = $request->input('idioma');
+        $actived = $request->input('actived');
 
 
         $pelicula = Pelicula::find($pelicula_id);
@@ -119,6 +120,10 @@ class HorarioController extends Controller
         }
         if ($idioma !== null && $idioma !== '') {
             $horario->idioma = $idioma;
+            $bandera = true;
+        }
+        if ($actived !== null && $actived !== '') {
+            $horario->actived = $actived;
             $bandera = true;
         }
 

@@ -16,7 +16,7 @@ class ExtraRoutesController extends Controller
     }
 
     public function peliculas(){
-        $peliculas = Pelicula::paginate(3);
+        $peliculas = Pelicula::with('horario')->paginate(3);
         return $peliculas;
     }
 
