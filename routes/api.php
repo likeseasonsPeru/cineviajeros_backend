@@ -23,9 +23,9 @@ Route::apiResources([
     'combos' => 'ComboController',
     'promotions' => 'PromotionController',
     'horarios' => 'HorarioController'
-], ["middleware" => "apikey.validate"]);
+], ["middleware" => ["apikey.validate", "cors"]]);
 
-Route::group(["middleware" => "apikey.validate"], function () {
+Route::group(["middleware" => ["apikey.validate", "cors"]], function () {
     Route::get('promotionpage', 'ExtraRoutesController@promotion');
     Route::get('peliculaspage', 'ExtraRoutesController@peliculas');
     Route::get('horariosPelicula/{id}', 'ExtraRoutesController@horariosByPelicula');
