@@ -19,6 +19,7 @@ class CreateCombosTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('precio');
+            $table->string('legal');
             $table->boolean('comision')->default(false);
             $table->timestamps();
         });

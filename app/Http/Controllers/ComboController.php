@@ -30,7 +30,7 @@ class ComboController extends Controller
     {
         //
 
-        if (!$request->input('title') || !$request->input('description') || !$request->input('precio')  || !$request->hasFile('image')) {
+        if (!$request->input('title') || !$request->input('description') || !$request->input('precio')  || !$request->hasFile('image') || !$request->input('legal')) {
             // NO estamos recibiendo los campos necesarios. Devolvemos error.
             return response()->json(['status' => 'failed', 'msg' => 'Faltan datos necesarios para la creacion']);
         }
@@ -93,6 +93,7 @@ class ComboController extends Controller
         $precio = $request->input('precio');
         $comision = $request->input('comision');
         $imagen = $request->file('image');
+        $legal = $request->input('legal');
 
 
         $bandera = false;
@@ -113,6 +114,11 @@ class ComboController extends Controller
             $combo->comision = $comision;
             $bandera = true;
         }
+        if ($legal !== null && $legal !== '') {
+            $combo->legal = $legal;
+            $bandera = true;
+        }
+        
 
         if ($request->hasFile('image')) {
 
