@@ -22,7 +22,8 @@ Route::apiResources([
     'peliculas' => 'PeliculaController', 
     'combos' => 'ComboController',
     'promotions' => 'PromotionController',
-    'horarios' => 'HorarioController'
+    'horarios' => 'HorarioController',
+    'banners' => 'BannerController'
 ], ["middleware" => ["apikey.validate", "cors"]]);
 
 Route::group(["middleware" => ["apikey.validate", "cors"]], function () {

@@ -115,18 +115,18 @@ class PromotionController extends Controller
             $promotion->comision = $comision;
             $bandera = true;
         }
-        if ($request->hasFile('image')){
+        if ($request->hasFile('image')) {
             // Eliminar la imagen antigua
-            $imgPath = public_path().$promotion->img;
-            if (@getimagesize($imgPath)){
+            $imgPath = public_path() . $promotion->img;
+            if (@getimagesize($imgPath)) {
                 unlink($imgPath);
             }
 
             // Subir una image
             $path = time() . $imagen->getClientOriginalName();
             $imagen->move(public_path() . '/imgs/promociones/', $path);
-            $promotion->img = '/imgs/promociones/'. $path;
-            
+            $promotion->img = '/imgs/promociones/' . $path;
+
             $bandera = true;
         }
 
@@ -150,6 +150,12 @@ class PromotionController extends Controller
         if (!$promotion) {
             return response()->json(['status' => 'failed', 'msg' => 'No existe promocion con este id']);
         }
+
+        $imgPath = public_path() . $promotion->img;
+        if (@getimagesize($imgPath)) {
+            unlink($imgPath);
+        }
+
         $promotion->delete();
         return response()->json(['status' => 'ok', 'msg' => 'Se ha eliminado correctamente']);
     }
