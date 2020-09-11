@@ -23,12 +23,14 @@ Route::apiResources([
     'combos' => 'ComboController',
     'promotions' => 'PromotionController',
     'horarios' => 'HorarioController',
-    'banners' => 'BannerController'
+    'banners' => 'BannerController',
+    'subscriptions' => 'SubscriptionsController'
 ], ["middleware" => ["apikey.validate", "cors"]]);
 
 Route::group(["middleware" => ["apikey.validate", "cors"]], function () {
     Route::get('promotionpage', 'ExtraRoutesController@promotion');
     Route::get('peliculaspage', 'ExtraRoutesController@peliculas');
+    Route::get('combospage', 'ExtraRoutesController@combo');
     Route::get('horariosPelicula/{id}', 'ExtraRoutesController@horariosByPelicula');
     Route::get('peliculaCategory/{category}', 'ExtraRoutesController@peliculasByCategoria');
 });
