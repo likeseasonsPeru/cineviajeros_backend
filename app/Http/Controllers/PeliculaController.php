@@ -62,7 +62,7 @@ class PeliculaController extends Controller
     public function show($id)
     {
         //
-        $pelicula = Pelicula::find($id);
+        $pelicula = Pelicula::with('horario')->find($id);
         if (!$pelicula) {
             return response()->json(['status' => 'failed', 'msg' => 'No existe pelicula con este id']);
         }

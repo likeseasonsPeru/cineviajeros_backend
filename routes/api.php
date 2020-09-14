@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SubscriptionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +25,7 @@ Route::apiResources([
     'promotions' => 'PromotionController',
     'horarios' => 'HorarioController',
     'banners' => 'BannerController',
-    'subscriptions' => 'SubscriptionsController'
+    'subscriptions' => 'SubscriptionController'
 ], ["middleware" => ["apikey.validate", "cors"]]);
 
 Route::group(["middleware" => ["apikey.validate", "cors"]], function () {

@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 class ExtraRoutesController extends Controller
 {
     public function promotion(){
-        $promotions = Promotion::paginate(3);
+        $promotions = Promotion::paginate(4);
         return $promotions;
     }
 
@@ -21,7 +21,7 @@ class ExtraRoutesController extends Controller
     }
 
     public function combo(){
-        $combos = Combo::paginate(3);
+        $combos = Combo::paginate(4);
         return $combos;
     }
 
