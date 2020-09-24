@@ -17,9 +17,10 @@ class CreatePromotionsTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->string('precio');
+            $table->string('precio')->default('0');
             $table->boolean('comision')->default(false);
             $table->string('img');
+            $table->text('legal');
             $table->string('url');
             $table->timestamps();
         });

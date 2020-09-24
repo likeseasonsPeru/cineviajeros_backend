@@ -30,7 +30,7 @@ class PromotionController extends Controller
         //
         if (
             !$request->input('title') || !$request->input('description') || !$request->input('precio')
-            || !$request->hasFile('image') || !$request->input('url')
+            || !$request->hasFile('image') || !$request->input('url') || !$request->input('legal')
         ) {
             // NO estamos recibiendo los campos necesarios. Devolvemos error.
             return response()->json(['status' => 'failed', 'msg' => 'Faltan datos necesarios para la creacion']);
@@ -87,6 +87,7 @@ class PromotionController extends Controller
         $img = $request->input('img');
         $url = $request->input('url');
         $comision = $request->input('comision');
+        $legal = $request->input('legal');
         $imagen = $request->file('image');
 
         $bandera = false;
@@ -109,6 +110,10 @@ class PromotionController extends Controller
         }
         if ($url !== null && $url !== '') {
             $promotion->url = $url;
+            $bandera = true;
+        }
+        if ($legal !== null && $legal !== '') {
+            $promotion->legal = $legal;
             $bandera = true;
         }
         if ($comision !== null && $comision !== '') {
