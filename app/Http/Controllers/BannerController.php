@@ -84,6 +84,7 @@ class BannerController extends Controller
         $description = $request->input('description');
         $url_trailer = $request->input('url_trailer');
         $url_compra = $request->input('url_compra');
+        $actived = $request->input('actived');
 
         $bandera = false;
 
@@ -102,6 +103,11 @@ class BannerController extends Controller
         }
         if ($url_compra !== null && $url_compra !== '') {
             $banner->url_compra = $url_compra;
+            $bandera = true;
+        }
+
+        if ($actived !== null && $actived !== '') {
+            $banner->actived = $actived;
             $bandera = true;
         }
 

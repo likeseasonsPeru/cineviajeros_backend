@@ -20,16 +20,19 @@ use Illuminate\Support\Facades\Route;
 }); */
 
 Route::apiResources([
-    'peliculas' => 'PeliculaController', 
+    'peliculas' => 'PeliculaController',
     'combos' => 'ComboController',
     'promotions' => 'PromotionController',
     'horarios' => 'HorarioController',
     'banners' => 'BannerController',
     'subscriptions' => 'SubscriptionController'
-], ["middleware" => ["jwt.verify", "cors"]]); 
+], ["middleware" => ["jwt.verify", "cors"]]);
 
-Route::post('register', 'UserController@register');
-Route::post('login', 'UserController@authenticate');
+Route::group(["middleware" => ["cors"]], function () {
+    Route::post('register', 'UserController@register');
+    Route::post('login', 'UserController@authenticate');
+});
+
 
 Route::group(["middleware" => ["apikey.validate", "cors"]], function () {
     Route::get('promotionpage', 'ExtraRoutesController@promotion');
@@ -45,7 +48,7 @@ Route::group(["middleware" => ["apikey.validate", "cors"]], function () {
     Route::get('promotions', 'PromotionController@index');
     Route::get('horarios', 'HorarioController@index');
     Route::get('banners', 'BannerController@index');
-    Route::get('subscriptions', 'SubscriptionController@index');
+    /* Route::get('subscriptions', 'SubscriptionController@index'); */
     Route::get('peliculas/{pelicula}', 'PeliculaController@show');
     Route::get('combos/{combo}', 'ComboController@show');
     Route::get('promotions/{promotion}', 'PromotionController@show');

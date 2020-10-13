@@ -23,7 +23,7 @@ class VerifyAccessKey
             return $next($request);
         } else {
             // Si falla devolvemos el mensaje de error
-            return response()->json(['status' => 'failed', 'msg' => 'unauthorized' ]);
+            return response()->json(['status' => 'failed', 'msg' => 'unauthorized', 'key' => $key , 'env' => env('API_KEY')]);
         }
     }
 }

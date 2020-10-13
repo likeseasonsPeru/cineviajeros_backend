@@ -20,6 +20,7 @@ class CreateBannersTable extends Migration
             $table->string('url_trailer')->nullable();
             $table->string('url_compra')->nullable();
             $table->string('img');
+            $table->boolean('actived')->default(true);
             $table->timestamps();
         });
     }
