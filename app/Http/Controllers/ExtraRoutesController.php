@@ -20,6 +20,11 @@ class ExtraRoutesController extends Controller
         return $peliculas;
     }
 
+    public function allpeliculas(){
+        $peliculas = Pelicula::with('horario')->get();
+        return $peliculas;
+    }
+
     public function combo(){
         $combos = Combo::paginate(4);
         return $combos;

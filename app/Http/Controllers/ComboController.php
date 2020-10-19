@@ -43,6 +43,18 @@ class ComboController extends Controller
         $file->move(public_path() . '/imgs/combos/', $name);
         $input['img'] = '/imgs/combos/' . $name;
         
+        // Valid extension
+        $valid_ext = array('png', 'jpeg', 'jpg');
+        // Image compression 
+        $location = public_path().'/imgs/combos/'.$name;
+        $file_extension = pathinfo($location, PATHINFO_EXTENSION);
+        $file_extension = strtolower($file_extension);
+        
+        if(in_array($file_extension,$valid_ext)){
+            // Compress Image
+            $this->compressImage($location,$location);
+        }
+
         $combo = Combo::create($input);
         return response()->json(['status' => 'ok', 'data' => $combo]);
     }
@@ -133,6 +145,19 @@ class ComboController extends Controller
             $imagen->move(public_path() . '/imgs/combos/', $path);
             $combo->img = '/imgs/combos/'. $path;
 
+
+            // Valid extension
+            $valid_ext = array('png', 'jpeg', 'jpg');
+            // Image compression 
+            $location = public_path().'/imgs/combos/'.$path;
+            $file_extension = pathinfo($location, PATHINFO_EXTENSION);
+            $file_extension = strtolower($file_extension);
+            
+            if(in_array($file_extension,$valid_ext)){
+                // Compress Image
+                $this->compressImage($location,$location);
+            }
+
             $bandera = true;
         }
 
@@ -167,4 +192,28 @@ class ComboController extends Controller
         $combo->delete();
         return response()->json(['status' => 'ok', 'msg' => 'Se ha eliminado correctamente']);
     }
+
+    function compressImage($source, $destination)
+    {
+
+        $quality = 75;
+        $info = getimagesize($source);
+
+        if ($info['mime'] == 'image/jpeg'){
+            $image = imagecreatefromjpeg($source);
+            $quality = 50;
+        }
+        elseif ($info['mime'] == 'image/gif') {
+            $image = imagecreatefromgif($source);
+            $quality = 90;
+        }
+
+        elseif ($info['mime'] == 'image/png'){
+            $image = imagecreatefrompng($source);
+            $quality = 90;
+        }
+        imagejpeg($image, $destination, $quality);
+    }
+    
+    
 }

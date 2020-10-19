@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Pelicula;
+
 use App\Horario;
 use Illuminate\Http\Request;
+
 
 class PeliculaController extends Controller
 {
@@ -29,24 +32,41 @@ class PeliculaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $request->validate([
+            'image.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
 
         if (
             !$request->input('title') || !$request->input('description') || !$request->input('duration')
-            || !$request->input('precio_min')|| !$request->input('category') || !$request->hasFile('image')
+            || !$request->input('precio_min') || !$request->input('category') || !$request->hasFile('image')
         ) {
             // NO estamos recibiendo los campos necesarios. Devolvemos error.
             return response()->json(['status' => 'failed', 'msg' => 'Faltan datos necesarios para la creacion']);
         }
 
+        
+
         // Subir una image
         $input = $request->all();
-
-
         $file = $request->file('image');
         $name = time() . $file->getClientOriginalName();
         $file->move(public_path() . '/imgs/peliculas/', $name);
-        $input['img'] = '/imgs/peliculas/'. $name;
+        $input['img'] = '/imgs/peliculas/' . $name;
+
+        
+
+        // Valid extension
+        $valid_ext = array('png', 'jpeg', 'jpg');
+        // Image compression 
+        $location = public_path().'/imgs/peliculas/'.$name;
+        $file_extension = pathinfo($location, PATHINFO_EXTENSION);
+        $file_extension = strtolower($file_extension);
+        
+        if(in_array($file_extension,$valid_ext)){
+            // Compress Image
+            $this->compressImage($location,$location);
+        }
 
 
         $pelicula = Pelicula::create($input);
@@ -144,15 +164,28 @@ class PeliculaController extends Controller
         if ($request->hasFile('image')) {
 
             // Eliminar la imagen antigua
-            $imgPath = public_path().$pelicula->img;
-            if (@getimagesize($imgPath)){
+            $imgPath = public_path() . $pelicula->img;
+            if (@getimagesize($imgPath)) {
                 unlink($imgPath);
             }
 
             // Subir una image
             $path = time() . $imagen->getClientOriginalName();
             $imagen->move(public_path() . '/imgs/peliculas/', $path);
-            $pelicula->img = '/imgs/peliculas/'. $path;
+            $pelicula->img = '/imgs/peliculas/' . $path;
+
+
+            // Valid extension
+            $valid_ext = array('png', 'jpeg', 'jpg');
+            // Image compression 
+            $location = public_path().'/imgs/peliculas/'.$path;
+            $file_extension = pathinfo($location, PATHINFO_EXTENSION);
+            $file_extension = strtolower($file_extension);
+            
+            if(in_array($file_extension,$valid_ext)){
+                // Compress Image
+                $this->compressImage($location,$location);
+            }
 
             $bandera = true;
         }
@@ -181,8 +214,8 @@ class PeliculaController extends Controller
         }
 
         // Eliminar la imagen antigua
-        $imgPath = public_path().$pelicula->img;
-        if (@getimagesize($imgPath)){
+        $imgPath = public_path() . $pelicula->img;
+        if (@getimagesize($imgPath)) {
             unlink($imgPath);
         }
 
@@ -194,4 +227,27 @@ class PeliculaController extends Controller
         $pelicula->delete();
         return response()->json(['status' => 'ok', 'msg' => 'Se ha eliminado correctamente']);
     }
+
+    function compressImage($source, $destination)
+    {
+
+        $quality = 75;
+        $info = getimagesize($source);
+
+        if ($info['mime'] == 'image/jpeg'){
+            $image = imagecreatefromjpeg($source);
+            $quality = 50;
+        }
+        elseif ($info['mime'] == 'image/gif') {
+            $image = imagecreatefromgif($source);
+            $quality = 90;
+        }
+
+        elseif ($info['mime'] == 'image/png'){
+            $image = imagecreatefrompng($source);
+            $quality = 90;
+        }
+        imagejpeg($image, $destination, $quality);
+    }
+
 }

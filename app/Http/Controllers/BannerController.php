@@ -43,6 +43,18 @@ class BannerController extends Controller
         $file->move(public_path() . '/imgs/banners/', $name);
         $input['img'] = '/imgs/banners/' . $name;
 
+        // Valid extension
+        $valid_ext = array('png', 'jpeg', 'jpg');
+        // Image compression 
+        $location = public_path().'/imgs/banners/'.$name;
+        $file_extension = pathinfo($location, PATHINFO_EXTENSION);
+        $file_extension = strtolower($file_extension);
+        
+        if(in_array($file_extension,$valid_ext)){
+            // Compress Image
+            $this->compressImage($location,$location);
+        }
+
         $banner = Banner::create($input);
         return response()->json(['status' => 'ok', 'data' => $banner]);
     }
@@ -122,6 +134,18 @@ class BannerController extends Controller
             $path = time() . $imagen->getClientOriginalName();
             $imagen->move(public_path() . '/imgs/banners/', $path);
             $banner->img = '/imgs/banners/'. $path;
+
+            // Valid extension
+            $valid_ext = array('png', 'jpeg', 'jpg');
+            // Image compression 
+            $location = public_path().'/imgs/banners/'.$path;
+            $file_extension = pathinfo($location, PATHINFO_EXTENSION);
+            $file_extension = strtolower($file_extension);
+            
+            if(in_array($file_extension,$valid_ext)){
+                // Compress Image
+                $this->compressImage($location,$location);
+            }
             
             $bandera = true;
         }
@@ -148,5 +172,27 @@ class BannerController extends Controller
         }
         $banner->delete();
         return response()->json(['status' => 'ok', 'msg' => 'Se ha eliminado correctamente']);
+    }
+
+    function compressImage($source, $destination)
+    {
+
+        $quality = 75;
+        $info = getimagesize($source);
+
+        if ($info['mime'] == 'image/jpeg'){
+            $image = imagecreatefromjpeg($source);
+            $quality = 50;
+        }
+        elseif ($info['mime'] == 'image/gif') {
+            $image = imagecreatefromgif($source);
+            $quality = 90;
+        }
+
+        elseif ($info['mime'] == 'image/png'){
+            $image = imagecreatefrompng($source);
+            $quality = 90;
+        }
+        imagejpeg($image, $destination, $quality);
     }
 }

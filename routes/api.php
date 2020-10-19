@@ -55,4 +55,5 @@ Route::group(["middleware" => ["apikey.validate", "cors"]], function () {
     Route::get('horarios/{horario}', 'HorarioController@show');
     Route::get('banners/{banner}', 'BannerController@show');
     Route::get('subscriptions/{subscription}', 'SubscriptionController@show');
+    Route::get('peliculas/all', 'ExtraRoutesController@allpeliculas');
 });
