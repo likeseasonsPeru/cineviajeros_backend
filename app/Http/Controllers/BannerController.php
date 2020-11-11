@@ -69,7 +69,7 @@ class BannerController extends Controller
     {
         //
         $banner = Banner::find($id);
-        if ($banner){
+        if (!$banner){
             return response()->json(['status' => 'failed', 'msg' => 'No existe banner con este id']);
         }
         return response()->json(['status' => 'ok', 'data' => $banner]);
