@@ -29,7 +29,7 @@ class PromotionController extends Controller
     {
         //
         if (
-            !$request->input('title') || !$request->input('description') || !$request->input('precio')
+            !$request->input('title') || !$request->input('description')
             || !$request->hasFile('image') || !$request->input('url') || !$request->input('legal')
         ) {
             // NO estamos recibiendo los campos necesarios. Devolvemos error.
