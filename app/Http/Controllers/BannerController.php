@@ -28,7 +28,7 @@ class BannerController extends Controller
     public function store(Request $request)
     {
         //
-        if (!$request->input('title') || !$request->hasFile('image') || !$request->input('description') || !$request->input('url_trailer')){
+        if (!$request->hasFile('image')){
             // NO estamos recibiendo los campos necesarios. Devolvemos error.
             return response()->json(['status' => 'failed', 'msg' => 'Faltan datos necesarios para la creacion']);
 
@@ -96,25 +96,30 @@ class BannerController extends Controller
         $description = $request->input('description');
         $url_trailer = $request->input('url_trailer');
         $url_compra = $request->input('url_compra');
+        $url = $request->input('url');
         $actived = $request->input('actived');
 
         $bandera = false;
 
-        if ($title !== null && $title !== '') {
+        if ($title !== null) {
             $banner->title = $title;
             $bandera = true;
         }
 
-        if ($description !== null && $description !== '') {
+        if ($description !== null) {
             $banner->description = $description;
             $bandera = true;
         }
-        if ($url_trailer !== null && $url_trailer !== '') {
+        if ($url_trailer !== null) {
             $banner->url_trailer = $url_trailer;
             $bandera = true;
         }
-        if ($url_compra !== null && $url_compra !== '') {
+        if ($url_compra !== null) {
             $banner->url_compra = $url_compra;
+            $bandera = true;
+        }
+        if ($url !== null) {
+            $banner->url = $url;
             $bandera = true;
         }
 
@@ -182,7 +187,7 @@ class BannerController extends Controller
 
         if ($info['mime'] == 'image/jpeg'){
             $image = imagecreatefromjpeg($source);
-            $quality = 50;
+            $quality = 90;
         }
         elseif ($info['mime'] == 'image/gif') {
             $image = imagecreatefromgif($source);
