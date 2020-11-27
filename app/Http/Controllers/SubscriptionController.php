@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Subscription;
+use App\Mail\MessageRecived;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class SubscriptionController extends Controller
 {
@@ -43,8 +45,20 @@ class SubscriptionController extends Controller
             return response()->json(['status' => 'failed', 'msg' => 'Faltan datos necesarios para la creacion']);
         }
 
+        // Enviar un email
+        Mail::to($request->input('email'))->queue(new MessageRecived);
+
+        if (count(Mail::failures())) {
+            $sendit = false;
+        } else {
+            $sendit = true;
+        }
+
         $subscription = Subscription::create($request->all());
-        return response()->json(['status' => 'ok', 'data' => $subscription]);
+
+       // return new MessageRecived;
+
+        return response()->json(['status' => 'ok', 'data' => $subscription, 'Enviado' => $sendit]);
     }
 
     /**
