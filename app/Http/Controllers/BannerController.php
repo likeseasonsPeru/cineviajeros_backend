@@ -99,29 +99,13 @@ class BannerController extends Controller
         $url = $request->input('url');
         $actived = $request->input('actived');
 
-        $bandera = false;
+        $bandera = true;
 
-        if ($title !== null) {
-            $banner->title = $title;
-            $bandera = true;
-        }
-
-        if ($description !== null) {
-            $banner->description = $description;
-            $bandera = true;
-        }
-        if ($url_trailer !== null) {
-            $banner->url_trailer = $url_trailer;
-            $bandera = true;
-        }
-        if ($url_compra !== null) {
-            $banner->url_compra = $url_compra;
-            $bandera = true;
-        }
-        if ($url !== null) {
-            $banner->url = $url;
-            $bandera = true;
-        }
+        $banner->title = $title;
+        $banner->description = $description;
+        $banner->url_trailer = $url_trailer;
+        $banner->url_compra = $url_compra;
+        $banner->url = $url;
 
         if ($actived !== null && $actived !== '') {
             $banner->actived = $actived;
