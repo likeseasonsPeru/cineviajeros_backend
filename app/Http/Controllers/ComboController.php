@@ -14,7 +14,7 @@ class ComboController extends Controller
      */
     public function index()
     {
-        $combo = Combo::all();
+        $combo = Combo::all()->sortBy("order");
         return $combo;
         //Esta funcion devuel todas las tareas que tenemos en la bd
     }

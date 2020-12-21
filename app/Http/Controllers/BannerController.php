@@ -15,7 +15,7 @@ class BannerController extends Controller
     public function index()
     {
         //
-        $banner = Banner::all();
+        $banner = Banner::all()->sortBy("order");
         return $banner;
     }
 
@@ -42,6 +42,10 @@ class BannerController extends Controller
         $name = time() . $file->getClientOriginalName();
         $file->move(public_path() . '/imgs/banners/', $name);
         $input['img'] = '/imgs/banners/' . $name;
+        
+
+        $count = Banner::all()->count();
+        $input['order'] = $count + 1;
 
         // Valid extension
         $valid_ext = array('png', 'jpeg', 'jpg');
@@ -56,7 +60,7 @@ class BannerController extends Controller
         }
 
         $banner = Banner::create($input);
-        return response()->json(['status' => 'ok', 'data' => $banner]);
+        return response()->json(['status' => 'ok',  'data' => $banner]);
     }
 
     /**

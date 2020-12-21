@@ -15,7 +15,7 @@ class PromotionController extends Controller
     public function index()
     {
         //
-        $promotion = Promotion::all();
+        $promotion = Promotion::all()->sortBy("order");
         return $promotion;
     }
 

@@ -24,13 +24,14 @@ Route::apiResources([
     'combos' => 'ComboController',
     'promotions' => 'PromotionController',
     'horarios' => 'HorarioController',
-    'banners' => 'BannerController',
-    'subscriptions' => 'SubscriptionController'
+    'banners' => 'BannerController'
 ], ["middleware" => ["jwt.verify", "cors"]]);
+
 
 Route::group(["middleware" => ["cors"]], function () {
     Route::post('register', 'UserController@register');
     Route::post('login', 'UserController@authenticate');
+    Route::post('subscriptionsAdd', 'SubscriptionController@store');
 });
 
 
@@ -40,6 +41,8 @@ Route::group(["middleware" => ["apikey.validate", "cors"]], function () {
     Route::get('combospage', 'ExtraRoutesController@combo');
     Route::get('horariosPelicula/{id}', 'ExtraRoutesController@horariosByPelicula');
     Route::get('peliculaCategory/{category}', 'ExtraRoutesController@peliculasByCategoria');
+    Route::post('peliculasByFilter', 'ExtraRoutesController@peliculasByFilter');
+    Route::get('orderTable/{table}', 'ExtraRoutesController@orderTable');
 });
 
 Route::group(["middleware" => ["apikey.validate", "cors"]], function () {
@@ -48,6 +51,7 @@ Route::group(["middleware" => ["apikey.validate", "cors"]], function () {
     Route::get('promotions', 'PromotionController@index');
     Route::get('horarios', 'HorarioController@index');
     Route::get('banners', 'BannerController@index');
+    Route::get('subscriptions', 'SubscriptionController@index');
     /* Route::get('subscriptions', 'SubscriptionController@index'); */
     Route::get('peliculas/{pelicula}', 'PeliculaController@show');
     Route::get('combos/{combo}', 'ComboController@show');
@@ -55,5 +59,15 @@ Route::group(["middleware" => ["apikey.validate", "cors"]], function () {
     Route::get('horarios/{horario}', 'HorarioController@show');
     Route::get('banners/{banner}', 'BannerController@show');
     Route::get('subscriptions/{subscription}', 'SubscriptionController@show');
-    Route::get('peliculas/all', 'ExtraRoutesController@allpeliculas');
+    Route::get('allpeliculas', 'ExtraRoutesController@allpeliculas');
+    
+});
+
+
+Route::group(["middleware" => ["jwt.verify", "cors"]], function () {
+    Route::post('sortUpdate/{table}', 'ExtraRoutesController@sortUpdatePeliculas');
+    /* Route::post('sortPromociones', 'ExtraRoutesController@authenticate');
+    Route::post('sortCombos', 'ExtraRoutesController@store');
+    Route::post('sortBanners', 'ExtraRoutesController@store'); */
+    
 });
