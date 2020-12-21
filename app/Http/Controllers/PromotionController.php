@@ -45,6 +45,10 @@ class PromotionController extends Controller
         $file->move(public_path() . '/imgs/promociones/', $name);
         $input['img'] = '/imgs/promociones/' . $name;
 
+        // order
+        $count = Promotion::all()->count();
+        $input['order'] = $count + 1;
+
         // Valid extension
         $valid_ext = array('png', 'jpeg', 'jpg');
         // Image compression 

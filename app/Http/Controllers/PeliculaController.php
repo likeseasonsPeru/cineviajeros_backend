@@ -54,7 +54,11 @@ class PeliculaController extends Controller
         $file->move(public_path() . '/imgs/peliculas/', $name);
         $input['img'] = '/imgs/peliculas/' . $name;
 
-        
+        // order
+        $count = Pelicula::all()->count();
+        $input['order'] = $count + 1;
+
+
 
         // Valid extension
         $valid_ext = array('png', 'jpeg', 'jpg');

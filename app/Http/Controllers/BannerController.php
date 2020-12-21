@@ -43,7 +43,7 @@ class BannerController extends Controller
         $file->move(public_path() . '/imgs/banners/', $name);
         $input['img'] = '/imgs/banners/' . $name;
         
-
+        // order
         $count = Banner::all()->count();
         $input['order'] = $count + 1;
 

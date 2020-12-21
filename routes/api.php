@@ -60,7 +60,8 @@ Route::group(["middleware" => ["apikey.validate", "cors"]], function () {
     Route::get('banners/{banner}', 'BannerController@show');
     Route::get('subscriptions/{subscription}', 'SubscriptionController@show');
     Route::get('allpeliculas', 'ExtraRoutesController@allpeliculas');
-    
+    Route::get('claim', 'ClaimedController@index');
+    Route::post('claim', 'ClaimedController@store');
 });
 
 

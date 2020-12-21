@@ -42,6 +42,11 @@ class ComboController extends Controller
         $name = time() . $file->getClientOriginalName();
         $file->move(public_path() . '/imgs/combos/', $name);
         $input['img'] = '/imgs/combos/' . $name;
+
+        // order
+        $count = Combo::all()->count();
+        $input['order'] = $count + 1;
+
         
         // Valid extension
         $valid_ext = array('png', 'jpeg', 'jpg');
