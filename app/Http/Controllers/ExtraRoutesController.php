@@ -50,27 +50,20 @@ class ExtraRoutesController extends Controller
     public function peliculasByFilter(Request $request)
     {
         $data = $request->json()->all();
-        
-        $category = null;
-        $horario = null;
-        $idioma = null;
+
 
         $category = $data['category'];
-        $horario = $data['horario'];
-        $idioma = $data['idioma'];
         if ($category === 'hoy') {
-            $peliculas = Pelicula::where('category', '!=', 'inactive')->with(["horario" => function($h) use($idioma , $horario) {
-                $h->where('horarios.idioma', $idioma);
-                $h->where('horarios.fecha', $horario);
-            }]);
+            $date = $this->formatFecha(date("Y-m-d"));
+            $peliculas = Pelicula::where('category', 'inactive')->whereHas("horario", function($h) use($date) {
+                $h->where('horarios.fecha', $date);
+            });
         } else {
-            $peliculas = Pelicula::where('category', $category)->whereHas("horario", function($h) use($idioma , $horario) {
-                $h->where('horarios.idioma', $idioma);
-                $h->where('horarios.fecha', $horario);
-            });;
+            $peliculas = Pelicula::where('category', $category)->with("horario");
         }
 
         return $peliculas->paginate(3);
+       /*  return $this->formatFecha($date); */
     }
 
     // Ordenar
@@ -129,4 +122,13 @@ class ExtraRoutesController extends Controller
 
         return response()->json(['status' => 'ok', 'data' => $datos]);
     }
+
+    function formatFecha($date)
+    {
+        $dateExplode = explode("-", $date);
+        $dateFormated = $dateExplode[2] . "/" . $dateExplode[1] . "/" . $dateExplode[0];
+        return $dateFormated;
+    }
 }
+
+
