@@ -55,7 +55,7 @@ class ExtraRoutesController extends Controller
         $category = $data['category'];
         if ($category === 'hoy') {
             $date = $this->formatFecha(date("Y-m-d"));
-            $peliculas = Pelicula::where('category', 'inactive')->whereHas("horario", function($h) use($date) {
+            $peliculas = Pelicula::where('category', '!=', 'inactive')->whereHas("horario", function($h) use($date) {
                 $h->where('horarios.fecha', $date);
             });
         } else {
@@ -126,6 +126,11 @@ class ExtraRoutesController extends Controller
     function formatFecha($date)
     {
         $dateExplode = explode("-", $date);
+        foreach($dateExplode as $val){
+            if (strpos($val, "0") === 0){
+                $val = substr($val, 1);
+            }
+        }
         $dateFormated = $dateExplode[2] . "/" . $dateExplode[1] . "/" . $dateExplode[0];
         return $dateFormated;
     }
