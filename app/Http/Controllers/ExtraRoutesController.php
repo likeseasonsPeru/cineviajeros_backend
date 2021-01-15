@@ -57,7 +57,7 @@ class ExtraRoutesController extends Controller
             $date = $this->formatFecha(date("Y-m-d"));
             $peliculas = Pelicula::where('category', '!=', 'inactive')->whereHas("horario", function($h) use($date) {
                 $h->where('horarios.fecha', $date);
-            });
+            })->with("horario");
         } else {
             $peliculas = Pelicula::where('category', $category)->with("horario");
         }
