@@ -62,7 +62,7 @@ class ExtraRoutesController extends Controller
             $peliculas = Pelicula::where('category', $category)->with("horario");
         }
 
-        return $peliculas->paginate(3);
+        return $peliculas->get();
        /*  return $this->formatFecha($date); */
     }
 
